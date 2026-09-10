@@ -150,7 +150,7 @@ export default async function credentialEndpoint(req, res) {
   }
 
   // Get the holder key from the proof JWT protected header "kid".
-  const holderKey = decodeProtectedHeader(proofJwt)?.kid;
+  const holderKey = proofJwt ? decodeProtectedHeader(proofJwt)?.kid : undefined;
 
   let credential;
 
@@ -183,13 +183,11 @@ export default async function credentialEndpoint(req, res) {
           const vcPayload = {
             ...cleanStaticVc,
             iss: didJwk,
-            sub: didJwk,
             jti: `urn:uuid:${randomUUID()}`,
             vc: {
               ...STATIC_JWT_VC.vc,
               credentialSubject: {
                 ...STATIC_JWT_VC.vc.credentialSubject,
-                id: didJwk,
               },
             },
           };
